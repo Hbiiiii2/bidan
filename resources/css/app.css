@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Styles */
+body {
+    font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+.btn-primary {
+    background: #b80049;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 999px;
+    font-weight: bold;
+}
+
+.btn-primary:hover {
+    background: #e2165f;
+}
+
+.btn-secondary {
+    background: #f4dce4;
+    padding: 12px 24px;
+    border-radius: 999px;
+}

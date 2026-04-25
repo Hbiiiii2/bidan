@@ -1,0 +1,66 @@
+body {
+    font-family: "Be Vietnam Pro", sans-serif;
+}
+
+/* Typography */
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.hero-desc {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    color: #555;
+}
+
+/* Layout */
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 4rem 1.5rem;
+}
+
+/* Buttons */
+.btn-primary {
+    background: #b80049;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 999px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-primary:hover {
+    background: #e2165f;
+}
+
+.btn-secondary {
+    background: #f4dce4;
+    padding: 12px 24px;
+    border-radius: 999px;
+}
+
+/* Navbar */
+.nav-link {
+    font-weight: 600;
+    color: #666;
+    transition: 0.3s;
+}
+
+.nav-link:hover {
+    color: #b80049;
+}
+
+.nav-link.active {
+    color: #b80049;
+    border-bottom: 2px solid #b80049;
+}
+
+/* Hero */
+.hero {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+}
