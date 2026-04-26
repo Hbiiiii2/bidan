@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 
 class AdminMidwifeController extends Controller
@@ -119,5 +118,43 @@ class AdminMidwifeController extends Controller
         $midwife->delete();
 
         return redirect('/admin/midwives')->with('success', 'Bidan berhasil dihapus.');
+    }
+
+    public function schedules(Request $request)
+    {
+        $query = trim((string) $request->query('q', ''));
+
+        $midwives = User::role('midwife')
+            ->when($query !== '', function ($builder) use ($query) {
+                $builder->where(function ($inner) use ($query) {
+                    $inner->where('name', 'like', '%' . $query . '%')
+                        ->orWhere('email', 'like', '%' . $query . '%')
+                        ->orWhere('nip', 'like', '%' . $query . '%');
+                });
+            })
+            ->withCount([
+                'schedules as upcoming_schedules_count' => function ($scheduleQuery) {
+                    $scheduleQuery->whereDate('date', '>=', now()->toDateString());
+                },
+            ])
+            ->with([
+                'schedules' => function ($scheduleQuery) {
+                    $scheduleQuery->whereDate('date', '>=', now()->toDateString())
+                        ->orderBy('date')
+                        ->orderBy('start_time')
+                        ->withCount([
+                            'bookings as active_bookings_count' => function ($bookingQuery) {
+                                $bookingQuery->where('status', '!=', 'canceled');
+                            },
+                        ]);
+                },
+            ])
+            ->orderBy('name')
+            ->get();
+
+        return view('pages.admin.midwives.schedules', [
+            'midwives' => $midwives,
+            'query' => $query,
+        ]);
     }
 }

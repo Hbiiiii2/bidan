@@ -1,21 +1,22 @@
 <?php
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Booking;
 use App\Models\Child;
 use App\Models\Immunization;
 use App\Models\Schedule;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     // /** @use HasFactory<\Database\Factories\UserFactory> */
-    // use HasFactory, Notifiable;
+    // use HasFactory;
 
-    use HasRoles;
+    use HasRoles, Notifiable;
     /**
      * The attributes that are mass assignable.
      *
@@ -30,6 +31,7 @@ class User extends Authenticatable
         'profile_photo',
         'hospital_institution',
         'address',
+        'phone_number',
         'career_start_year',
         'available_days',
         'available_start_time',

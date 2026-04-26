@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -36,10 +37,12 @@ class AuthController extends Controller
         Role::firstOrCreate(['name' => 'parent']);
         $user->assignRole('parent');
 
+        event(new Registered($user));
+
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect('/children')->with('success', 'Registrasi berhasil. Selamat datang!');
+        return redirect()->route('verification.notice')->with('success', 'Registrasi berhasil. Silakan verifikasi email Anda terlebih dahulu.');
     }
 
     // PROSES LOGIN
@@ -65,7 +68,19 @@ class AuthController extends Controller
                 return redirect('/dashboard');
             }
 
-            return redirect('/children');
+            if ($user instanceof User && $user->hasRole('parent') && ! $user->hasVerifiedEmail()) {
+                $intendedUrl = $request->session()->get('url.intended');
+
+                if (is_string($intendedUrl) && str_contains($intendedUrl, '/email/verify/')) {
+                    return redirect()->to($intendedUrl);
+                }
+
+                $user->sendEmailVerificationNotification();
+
+                return redirect()->route('verification.notice')->with('success', 'Akun Anda belum aktif. Link verifikasi sudah dikirim ulang ke email Anda.');
+            }
+
+            return redirect('/parent/dashboard');
         }
 
         return back()->withErrors([

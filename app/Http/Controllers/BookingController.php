@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Child;
+use App\Mail\BookingCreatedMail;
 use App\Models\Schedule;
 use App\Models\Service;
 use App\Models\Vaccine;
@@ -10,6 +11,7 @@ use App\Services\ServiceScheduleSynchronizer;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class BookingController extends Controller
 {
@@ -188,6 +190,12 @@ class BookingController extends Controller
             'status'      => 'pending',
             'notes'       => $validated['notes'] ?? null,
         ]);
+
+        $booking->load(['user', 'child', 'service', 'schedule.midwife', 'transaction']);
+
+        if ($booking->user?->email) {
+            Mail::to($booking->user->email)->send(new BookingCreatedMail($booking));
+        }
 
         return redirect('/bookings')->with('success', 'Booking berhasil dibuat. Silakan lanjutkan ke pembayaran.');
     }

@@ -1,9 +1,11 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Mail\PaymentSuccessfulMail;
 use App\Models\Booking;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class PaymentController extends Controller
 {
@@ -62,13 +64,20 @@ class PaymentController extends Controller
             abort(403);
         }
 
+        $booking = $transaction->booking()->with(['user', 'child', 'service', 'schedule.midwife', 'transaction'])->firstOrFail();
+
+        $wasAlreadyPaid = $booking->status === 'paid';
+
         $transaction->update([
             'status'  => 'settlement',
             'paid_at' => now(),
         ]);
 
-        $booking = $transaction->booking;
         $booking->update(['status' => 'paid']);
+
+        if (!$wasAlreadyPaid && $booking->user?->email) {
+            Mail::to($booking->user->email)->send(new PaymentSuccessfulMail($booking, $transaction));
+        }
 
         return view('pages.booking.success');
     }

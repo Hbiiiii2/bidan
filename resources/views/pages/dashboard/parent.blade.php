@@ -2,108 +2,165 @@
 
 @section('content')
 
-<div class="max-w-7xl mx-auto px-6 py-8">
-    <!-- Header -->
-    <div class="mb-8">
-        <p class="text-sm uppercase tracking-[0.2em] font-bold text-pink-600 opacity-80">Welcome Back</p>
-        <h1 class="text-3xl md:text-4xl font-black text-gray-900 mt-2">Halo, {{ auth()->user()->name }}! 👋</h1>
-        <p class="text-gray-600 mt-2">Pantau kesehatan anak dan kelola booking layanan bidan.</p>
-    </div>
+<div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+    <section class="mb-6 overflow-hidden rounded-3xl border border-cyan-100 bg-gradient-to-r from-cyan-50 via-white to-rose-50 shadow-sm">
+        <div class="flex flex-col gap-4 px-5 py-6 sm:px-8 md:flex-row md:items-end md:justify-between">
+            <div>
+                <p class="mb-1 inline-flex rounded-full border border-cyan-200 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-wide text-cyan-700">Dashboard Parent</p>
+                <h1 class="text-2xl font-extrabold text-slate-900 sm:text-3xl">Halo, {{ auth()->user()->name }}</h1>
+                <p class="mt-2 max-w-2xl text-sm text-slate-600 sm:text-base">Pantau jadwal layanan anak, progres imunisasi, dan kelengkapan profil keluarga dalam satu halaman.</p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+                <a href="/services" class="inline-flex rounded-full bg-cyan-600 px-4 py-2 text-sm font-semibold text-white hover:bg-cyan-700">Booking Layanan</a>
+                <a href="/parent/profile" class="inline-flex rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">Profil Parent</a>
+            </div>
+        </div>
+    </section>
 
-    <!-- Quick Stats -->
-    <div class="grid gap-6 md:grid-cols-4 mb-8">
-        <div class="rounded-2xl bg-gradient-to-br from-pink-50 to-pink-100 p-6 ring-1 ring-pink-200">
-            <p class="text-sm font-semibold text-pink-600 uppercase tracking-[0.1em]\">Anak</p>
-            <p class="text-3xl font-black text-pink-700 mt-2">{{ auth()->user()->children_count ?? 0 }}</p>
-            <p class="text-sm text-pink-600 mt-2">Terdaftar</p>
-        </div>
-        <div class="rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 p-6 ring-1 ring-blue-200">
-            <p class="text-sm font-semibold text-blue-600 uppercase tracking-[0.1em]\">Booking Aktif</p>
-            <p class="text-3xl font-black text-blue-700 mt-2">{{ $activeBookings ?? 0 }}</p>
-            <p class="text-sm text-blue-600 mt-2">Menunggu pembayaran</p>
-        </div>
-        <div class="rounded-2xl bg-gradient-to-br from-green-50 to-green-100 p-6 ring-1 ring-green-200">
-            <p class="text-sm font-semibold text-green-600 uppercase tracking-[0.1em]\">Terkonfirmasi</p>
-            <p class="text-3xl font-black text-green-700 mt-2">{{ $paidBookings ?? 0 }}</p>
-            <p class="text-sm text-green-600 mt-2\">Sudah dibayar</p>
-        </div>
-        <div class="rounded-2xl bg-gradient-to-br from-purple-50 to-purple-100 p-6 ring-1 ring-purple-200">
-            <p class="text-sm font-semibold text-purple-600 uppercase tracking-[0.1em]\">Imunisasi</p>
-            <p class="text-3xl font-black text-purple-700 mt-2">{{ $totalImmunizations ?? 0 }}</p>
-            <p class="text-sm text-purple-600 mt-2\">Tercatat</p>
-        </div>
-    </div>
+    <section class="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <article class="rounded-2xl border border-rose-100 bg-white p-5 shadow-sm">
+            <p class="text-xs font-semibold uppercase tracking-wide text-rose-600">Jumlah Anak</p>
+            <p class="mt-2 text-3xl font-extrabold text-slate-900">{{ $childrenCount }}</p>
+            <p class="mt-1 text-sm text-slate-500">Anak terdaftar di akun ini.</p>
+        </article>
+        <article class="rounded-2xl border border-amber-100 bg-white p-5 shadow-sm">
+            <p class="text-xs font-semibold uppercase tracking-wide text-amber-600">Booking Pending</p>
+            <p class="mt-2 text-3xl font-extrabold text-slate-900">{{ $activeBookings }}</p>
+            <p class="mt-1 text-sm text-slate-500">Menunggu pembayaran.</p>
+        </article>
+        <article class="rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm">
+            <p class="text-xs font-semibold uppercase tracking-wide text-emerald-600">Booking Dibayar</p>
+            <p class="mt-2 text-3xl font-extrabold text-slate-900">{{ $paidBookings }}</p>
+            <p class="mt-1 text-sm text-slate-500">Siap diproses bidan.</p>
+        </article>
+        <article class="rounded-2xl border border-indigo-100 bg-white p-5 shadow-sm">
+            <p class="text-xs font-semibold uppercase tracking-wide text-indigo-600">Total Imunisasi</p>
+            <p class="mt-2 text-3xl font-extrabold text-slate-900">{{ $totalImmunizations }}</p>
+            <p class="mt-1 text-sm text-slate-500">Tindakan imunisasi tercatat.</p>
+        </article>
+    </section>
 
-    <!-- Quick Actions -->
-    <div class="grid gap-4 md:grid-cols-3 mb-8">
-        <a href="/children/create" class="rounded-2xl bg-pink-600 text-white p-6 hover:bg-pink-700 transition ring-1 ring-pink-700/50">
-            <p class="text-xl font-bold">+ Tambah Data Anak</p>
-            <p class="text-sm text-pink-100 mt-1">Daftarkan anak Anda</p>
-        </a>
-        <a href="/services" class="rounded-2xl bg-blue-600 text-white p-6 hover:bg-blue-700 transition ring-1 ring-blue-700/50">
-            <p class="text-xl font-bold">Booking Layanan</p>
-            <p class="text-sm text-blue-100 mt-1">Lihat layanan yang tersedia</p>
-        </a>
-        <a href="/bookings" class="rounded-2xl bg-purple-600 text-white p-6 hover:bg-purple-700 transition ring-1 ring-purple-700/50">
-            <p class="text-xl font-bold">Riwayat Booking</p>
-            <p class="text-sm text-purple-100 mt-1">Kelola booking Anda</p>
-        </a>
-    </div>
+    <section class="mb-6 grid gap-4 lg:grid-cols-3">
+        <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:col-span-2">
+            <h2 class="text-lg font-bold text-slate-900">Jadwal Terdekat</h2>
+            @if($nextBooking)
+                <div class="mt-4 rounded-xl border border-cyan-100 bg-cyan-50 p-4">
+                    <p class="text-sm font-semibold text-cyan-700">{{ $nextBooking->service->name }}</p>
+                    <p class="mt-1 text-lg font-bold text-slate-900">{{ $nextBooking->child->name }}</p>
+                    <p class="mt-2 text-sm text-slate-600">{{ \Carbon\Carbon::parse($nextBooking->schedule->date)->format('d/m/Y') }} • {{ substr($nextBooking->schedule->start_time, 0, 5) }} - {{ substr($nextBooking->schedule->end_time, 0, 5) }}</p>
+                    <p class="mt-1 text-sm text-slate-600">Bidan: {{ $nextBooking->schedule->midwife->name ?? '-' }}</p>
+                </div>
+            @else
+                <div class="mt-4 rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-sm text-slate-500">
+                    Belum ada jadwal terdekat. Silakan booking layanan terlebih dahulu.
+                </div>
+            @endif
 
-    <!-- Recent Activity -->
-    <div class="grid gap-8 lg:grid-cols-2">
-        <!-- Recent Bookings -->
-        <div>
-            <h2 class="text-xl font-bold text-gray-900 mb-4">Booking Terbaru</h2>
-            <div class="space-y-3">
-                @forelse($recentBookings ?? [] as $booking)
-                    <article class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-gray-100 hover:shadow-lg transition">
-                        <div class="flex items-start justify-between">
-                            <div class="flex-1">
-                                <h3 class="font-bold text-gray-900">{{ $booking->service->name }}</h3>
-                                <p class="text-sm text-gray-600 mt-1">{{ $booking->child->name }}</p>
-                                <p class="text-xs text-gray-500 mt-1">{{ \Carbon\Carbon::parse($booking->schedule->date)->format('d M Y') }} • {{ substr($booking->schedule->start_time, 0, 5) }}</p>
+            <div class="mt-4 grid gap-3 sm:grid-cols-2">
+                <div class="rounded-xl border border-slate-200 p-3">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Jadwal Mendatang</p>
+                    <p class="mt-1 text-2xl font-bold text-slate-900">{{ $upcomingBookings }}</p>
+                </div>
+                <div class="rounded-xl border border-slate-200 p-3">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Booking Selesai</p>
+                    <p class="mt-1 text-2xl font-bold text-slate-900">{{ $completedBookings }}</p>
+                </div>
+            </div>
+        </article>
+
+        <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <h2 class="text-lg font-bold text-slate-900">Status Keluarga</h2>
+            <div class="mt-4 space-y-4">
+                <div>
+                    <div class="mb-1 flex items-center justify-between text-sm">
+                        <span class="font-semibold text-slate-700">Cakupan Imunisasi Anak</span>
+                        <span class="font-bold text-cyan-700">{{ $immunizationCoverage }}%</span>
+                    </div>
+                    <div class="h-2.5 overflow-hidden rounded-full bg-slate-100">
+                        <div class="h-full rounded-full bg-cyan-500" style="width: {{ $immunizationCoverage }}%"></div>
+                    </div>
+                    <p class="mt-1 text-xs text-slate-500">{{ $childrenWithImmunization }} dari {{ $childrenCount }} anak sudah punya catatan imunisasi.</p>
+                </div>
+
+                <div>
+                    <div class="mb-1 flex items-center justify-between text-sm">
+                        <span class="font-semibold text-slate-700">Kelengkapan Profil Parent</span>
+                        <span class="font-bold text-rose-700">{{ $profileCompletion }}%</span>
+                    </div>
+                    <div class="h-2.5 overflow-hidden rounded-full bg-slate-100">
+                        <div class="h-full rounded-full bg-rose-500" style="width: {{ $profileCompletion }}%"></div>
+                    </div>
+                    <p class="mt-1 text-xs text-slate-500">Lengkapi foto, telepon, dan alamat untuk hasil terbaik.</p>
+                </div>
+
+                <a href="/parent/profile" class="inline-flex rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">Lengkapi Profil</a>
+            </div>
+        </article>
+    </section>
+
+    <section class="grid gap-6 lg:grid-cols-2">
+        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div class="border-b border-slate-200 bg-slate-50 px-5 py-4">
+                <h2 class="text-lg font-bold text-slate-900">Booking Terbaru</h2>
+            </div>
+            <div class="space-y-3 p-4 sm:p-5">
+                @forelse($recentBookings as $booking)
+                    @php
+                        $statusClass = match($booking->status) {
+                            'paid' => 'bg-emerald-100 text-emerald-700',
+                            'pending' => 'bg-amber-100 text-amber-700',
+                            'confirmed' => 'bg-blue-100 text-blue-700',
+                            'completed' => 'bg-slate-200 text-slate-700',
+                            default => 'bg-slate-100 text-slate-700',
+                        };
+                    @endphp
+                    <article class="rounded-xl border border-slate-200 p-3">
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <p class="font-bold text-slate-900">{{ $booking->service->name ?? '-' }}</p>
+                                <p class="text-sm text-slate-600">{{ $booking->child->name ?? '-' }}</p>
+                                <p class="mt-1 text-xs text-slate-500">{{ \Carbon\Carbon::parse($booking->schedule->date)->format('d/m/Y') }} • {{ substr($booking->schedule->start_time, 0, 5) }}</p>
                             </div>
-                            <span class="inline-flex rounded-full px-3 py-1 text-xs font-bold
-                                @if($booking->status === 'paid') bg-green-100 text-green-700
-                                @else bg-yellow-100 text-yellow-700 @endif">
-                                @if($booking->status === 'paid') ✓ Dibayar @else ⏱ Pending @endif
-                            </span>
+                            <span class="inline-flex rounded-full px-2.5 py-1 text-xs font-semibold {{ $statusClass }}">{{ ucfirst($booking->status) }}</span>
                         </div>
                     </article>
                 @empty
-                    <div class="rounded-2xl bg-white p-8 text-center shadow-sm ring-1 ring-gray-100">
-                        <p class="text-gray-600 font-semibold">Belum ada booking</p>
-                        <a href="/services" class="text-pink-600 font-semibold mt-2 inline-block">Buat booking sekarang →</a>
+                    <div class="rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-sm text-slate-500">
+                        Belum ada booking terbaru.
                     </div>
                 @endforelse
             </div>
         </div>
 
-        <!-- Data Anak Overview -->
-        <div>
-            <h2 class="text-xl font-bold text-gray-900 mb-4">Data Anak</h2>
-            <div class="space-y-3">
-                @forelse($children ?? [] as $child)
-                    <article class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-gray-100 hover:shadow-lg transition">
-                        <div class="flex items-start justify-between">
-                            <div class="flex-1">
-                                <h3 class="font-bold text-gray-900">{{ $child->name }}</h3>
-                                <p class="text-sm text-gray-600 mt-1">{{ $child->gender === 'male' ? '👦 Laki-laki' : '👧 Perempuan' }} • {{ $child->birth_date->age }} tahun</p>
-                                <p class="text-xs text-gray-500 mt-1\">{{ $child->immunizations_count }} imunisasi tercatat</p>
+        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div class="border-b border-slate-200 bg-slate-50 px-5 py-4">
+                <h2 class="text-lg font-bold text-slate-900">Data Anak</h2>
+            </div>
+            <div class="space-y-3 p-4 sm:p-5">
+                @forelse($children as $child)
+                    <article class="rounded-xl border border-slate-200 p-3">
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <p class="font-bold text-slate-900">{{ $child->name }}</p>
+                                <p class="text-sm text-slate-600">
+                                    {{ $child->gender === 'male' ? 'Laki-laki' : 'Perempuan' }}
+                                    @if($child->birth_date)
+                                        • {{ $child->birth_date->age }} tahun
+                                    @endif
+                                </p>
+                                <p class="mt-1 text-xs text-slate-500">{{ $child->immunizations_count }} catatan imunisasi</p>
                             </div>
-                            <a href="/child/{{ $child->id }}/status" class="text-pink-600 font-semibold text-sm hover:text-pink-700">Cek →</a>
+                            <a href="/child/{{ $child->id }}/status" class="text-sm font-semibold text-cyan-700 hover:text-cyan-800">Lihat</a>
                         </div>
                     </article>
                 @empty
-                    <div class="rounded-2xl bg-white p-8 text-center shadow-sm ring-1 ring-gray-100">
-                        <p class="text-gray-600 font-semibold">Belum ada data anak</p>
-                        <a href="/children/create" class="text-pink-600 font-semibold mt-2 inline-block">Tambah anak sekarang →</a>
+                    <div class="rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-sm text-slate-500">
+                        Belum ada data anak. Tambahkan anak untuk mulai tracking imunisasi.
                     </div>
                 @endforelse
             </div>
         </div>
-    </div>
+    </section>
 </div>
 
 @endsection

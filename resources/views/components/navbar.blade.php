@@ -8,7 +8,10 @@
         if ($user->hasRole('admin')) {
             $homeUrl = '/admin';
             $homeIsActive = request()->is('admin') || request()->is('admin/*');
-        } elseif ($user->hasRole('parent') || $user->hasRole('midwife')) {
+        } elseif ($user->hasRole('parent')) {
+            $homeUrl = '/parent/dashboard';
+            $homeIsActive = request()->is('parent/dashboard') || request()->is('parent/dashboard/*');
+        } elseif ($user->hasRole('midwife')) {
             $homeUrl = '/dashboard';
             $homeIsActive = request()->is('dashboard') || request()->is('dashboard/*');
         }
@@ -27,6 +30,7 @@
                     <a href="/children" class="font-semibold {{ request()->is('children*') || request()->is('child/*') ? 'text-[#b80049]' : 'text-gray-600' }}">Data Anak</a>
                     <a href="/services" class="font-semibold {{ request()->is('services*') ? 'text-[#b80049]' : 'text-gray-600' }}">Layanan</a>
                     <a href="/bookings" class="font-semibold {{ request()->is('bookings*') || request()->is('booking*') || request()->is('checkout*') ? 'text-[#b80049]' : 'text-gray-600' }}">Booking</a>
+                    <a href="/parent/profile" class="font-semibold {{ request()->is('parent/profile') ? 'text-[#b80049]' : 'text-gray-600' }}">Profil</a>
                 @endif
 
                 @if(auth()->user()->hasRole('midwife'))
@@ -38,6 +42,7 @@
 
                 @if(auth()->user()->hasRole('admin'))
                     <a href="/admin" class="font-semibold {{ request()->is('admin*') ? 'text-[#b80049]' : 'text-gray-600' }}">Admin</a>
+                    <a href="/admin/parents" class="font-semibold {{ request()->is('admin/parents*') ? 'text-[#b80049]' : 'text-gray-600' }}">User Parent</a>
                 @endif
             @endauth
         </div>
@@ -89,6 +94,7 @@
                         <a href="/children" class="rounded-lg px-3 py-2 font-semibold {{ request()->is('children*') || request()->is('child/*') ? 'bg-pink-50 text-[#b80049]' : 'text-gray-700 hover:bg-gray-50' }}">Data Anak</a>
                         <a href="/services" class="rounded-lg px-3 py-2 font-semibold {{ request()->is('services*') ? 'bg-pink-50 text-[#b80049]' : 'text-gray-700 hover:bg-gray-50' }}">Layanan</a>
                         <a href="/bookings" class="rounded-lg px-3 py-2 font-semibold {{ request()->is('bookings*') || request()->is('booking*') || request()->is('checkout*') ? 'bg-pink-50 text-[#b80049]' : 'text-gray-700 hover:bg-gray-50' }}">Booking</a>
+                        <a href="/parent/profile" class="rounded-lg px-3 py-2 font-semibold {{ request()->is('parent/profile') ? 'bg-pink-50 text-[#b80049]' : 'text-gray-700 hover:bg-gray-50' }}">Profil</a>
                     @endif
 
                     @if(auth()->user()->hasRole('midwife'))
@@ -100,6 +106,7 @@
 
                     @if(auth()->user()->hasRole('admin'))
                         <a href="/admin" class="rounded-lg px-3 py-2 font-semibold {{ request()->is('admin*') ? 'bg-pink-50 text-[#b80049]' : 'text-gray-700 hover:bg-gray-50' }}">Admin</a>
+                        <a href="/admin/parents" class="rounded-lg px-3 py-2 font-semibold {{ request()->is('admin/parents*') ? 'bg-pink-50 text-[#b80049]' : 'text-gray-700 hover:bg-gray-50' }}">User Parent</a>
                     @endif
 
                     <div class="mt-3 border-t border-gray-100 pt-3">

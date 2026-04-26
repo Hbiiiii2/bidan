@@ -4,86 +4,126 @@
 
 @section('content')
 
-<div class="max-w-7xl mx-auto px-6 py-8">
-    <section class="rounded-2xl bg-gradient-to-r from-[#b80049] to-[#e2165f] text-white p-8 shadow-lg">
-        <p class="text-sm uppercase tracking-[0.2em] font-bold opacity-80">Admin Dashboard</p>
-        <h1 class="text-3xl md:text-4xl font-black mt-2">Monitoring Kebidan-Yuk</h1>
-        <p class="mt-3 text-white/90">Pantau statistik utama dan aktivitas terbaru sistem secara ringkas.</p>
-        <div class="mt-6 flex flex-wrap gap-3">
-            <a href="/admin/services" class="inline-flex items-center rounded-full bg-white px-5 py-2.5 font-bold text-[#b80049]">
-                Kelola Layanan
-            </a>
-            <a href="/admin/midwives" class="inline-flex items-center rounded-full bg-white px-5 py-2.5 font-bold text-[#b80049]">
-                Kelola Bidan
-            </a>
+<div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+    <section class="relative overflow-hidden rounded-3xl border border-rose-200 bg-gradient-to-br from-rose-600 via-fuchsia-600 to-amber-500 p-6 text-white shadow-xl sm:p-8">
+        <div class="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-white/20 blur-2xl"></div>
+        <div class="pointer-events-none absolute -bottom-20 left-8 h-52 w-52 rounded-full bg-amber-200/30 blur-3xl"></div>
+
+        <div class="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+                <p class="inline-flex rounded-full border border-white/25 bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em]">Admin Dashboard</p>
+                <h1 class="mt-3 text-3xl font-black leading-tight sm:text-4xl">Panel Monitoring Kebidan-Yuk</h1>
+                <p class="mt-2 max-w-2xl text-sm text-white/90 sm:text-base">Pantau performa operasional, aktivitas booking, dan progres imunisasi dalam satu panel terpadu.</p>
+            </div>
+
+            <div class="flex flex-wrap gap-2">
+                <a href="/admin/services" class="inline-flex items-center rounded-full border border-white/40 bg-white/20 px-4 py-2 text-sm font-bold text-white backdrop-blur transition hover:bg-white/30">Kelola Layanan</a>
+                <a href="/admin/midwives" class="inline-flex items-center rounded-full border border-white/40 bg-white px-4 py-2 text-sm font-bold text-rose-700 transition hover:bg-rose-50">Kelola Bidan</a>
+                <a href="/admin/midwives/schedules" class="inline-flex items-center rounded-full border border-white/40 bg-white/20 px-4 py-2 text-sm font-bold text-white backdrop-blur transition hover:bg-white/30">Lihat Jadwal Bidan</a>
+                <a href="/admin/parents" class="inline-flex items-center rounded-full border border-white/40 bg-white px-4 py-2 text-sm font-bold text-rose-700 transition hover:bg-rose-50">Kelola Parent</a>
+            </div>
         </div>
     </section>
 
-    <section class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <article class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-100">
-            <p class="text-xs uppercase tracking-[0.2em] text-gray-400 font-bold">Parent</p>
-            <p class="mt-2 text-3xl font-black text-[#b80049]">{{ $summary['total_parents'] }}</p>
+    <section class="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <article class="rounded-2xl border border-sky-100 bg-white p-5 shadow-sm">
+            <p class="text-xs font-semibold uppercase tracking-wide text-sky-600">Total Parent</p>
+            <p class="mt-2 text-3xl font-extrabold text-slate-900">{{ $summary['total_parents'] }}</p>
+            <p class="mt-1 text-sm text-slate-500">Akun orang tua terdaftar.</p>
         </article>
-        <article class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-100">
-            <p class="text-xs uppercase tracking-[0.2em] text-gray-400 font-bold">Bidan</p>
-            <p class="mt-2 text-3xl font-black text-[#b80049]">{{ $summary['total_midwives'] }}</p>
+
+        <article class="rounded-2xl border border-indigo-100 bg-white p-5 shadow-sm">
+            <p class="text-xs font-semibold uppercase tracking-wide text-indigo-600">Total Bidan</p>
+            <p class="mt-2 text-3xl font-extrabold text-slate-900">{{ $summary['total_midwives'] }}</p>
+            <p class="mt-1 text-sm text-slate-500">Tenaga bidan aktif di sistem.</p>
         </article>
-        <article class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-100">
-            <p class="text-xs uppercase tracking-[0.2em] text-gray-400 font-bold">Anak Terdaftar</p>
-            <p class="mt-2 text-3xl font-black text-[#b80049]">{{ $summary['total_children'] }}</p>
+
+        <article class="rounded-2xl border border-amber-100 bg-white p-5 shadow-sm">
+            <p class="text-xs font-semibold uppercase tracking-wide text-amber-600">Anak Terdaftar</p>
+            <p class="mt-2 text-3xl font-extrabold text-slate-900">{{ $summary['total_children'] }}</p>
+            <p class="mt-1 text-sm text-slate-500">Data anak yang sudah masuk.</p>
         </article>
-        <article class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-100">
-            <p class="text-xs uppercase tracking-[0.2em] text-gray-400 font-bold">Total Layanan</p>
-            <p class="mt-2 text-3xl font-black text-[#b80049]">{{ $summary['total_services'] }}</p>
-        </article>
-        <article class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-100 sm:col-span-2">
-            <p class="text-xs uppercase tracking-[0.2em] text-gray-400 font-bold">Booking Pending</p>
-            <p class="mt-2 text-3xl font-black text-amber-600">{{ $summary['pending_bookings'] }}</p>
-        </article>
-        <article class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-100 sm:col-span-2">
-            <p class="text-xs uppercase tracking-[0.2em] text-gray-400 font-bold">Booking Paid</p>
-            <p class="mt-2 text-3xl font-black text-green-600">{{ $summary['paid_bookings'] }}</p>
-        </article>
-        <article class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-100 sm:col-span-2 lg:col-span-4">
-            <p class="text-xs uppercase tracking-[0.2em] text-gray-400 font-bold">Total Imunisasi Tercatat</p>
-            <p class="mt-2 text-3xl font-black text-[#b80049]">{{ $summary['total_immunizations'] }}</p>
+
+        <article class="rounded-2xl border border-rose-100 bg-white p-5 shadow-sm">
+            <p class="text-xs font-semibold uppercase tracking-wide text-rose-600">Total Layanan</p>
+            <p class="mt-2 text-3xl font-extrabold text-slate-900">{{ $summary['total_services'] }}</p>
+            <p class="mt-1 text-sm text-slate-500">Layanan yang tersedia.</p>
         </article>
     </section>
 
-    <section class="mt-8 grid gap-6 lg:grid-cols-2">
-        <div class="rounded-2xl bg-white shadow-sm ring-1 ring-gray-100 overflow-hidden">
-            <div class="px-5 py-4 border-b bg-gray-50">
-                <h2 class="font-bold text-lg">Booking Terbaru</h2>
+    <section class="mt-4 grid gap-4 lg:grid-cols-3">
+        <article class="rounded-2xl border border-amber-100 bg-gradient-to-br from-amber-50 to-white p-5 shadow-sm">
+            <div class="flex items-center justify-between gap-3">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-amber-700">Booking Pending</p>
+                    <p class="mt-2 text-3xl font-extrabold text-amber-700">{{ $summary['pending_bookings'] }}</p>
+                </div>
+                <span class="rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-700">Perlu tindak lanjut</span>
             </div>
+        </article>
+
+        <article class="rounded-2xl border border-emerald-100 bg-gradient-to-br from-emerald-50 to-white p-5 shadow-sm">
+            <div class="flex items-center justify-between gap-3">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-emerald-700">Booking Paid</p>
+                    <p class="mt-2 text-3xl font-extrabold text-emerald-700">{{ $summary['paid_bookings'] }}</p>
+                </div>
+                <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700">Siap diproses</span>
+            </div>
+        </article>
+
+        <article class="rounded-2xl border border-fuchsia-100 bg-gradient-to-br from-fuchsia-50 to-white p-5 shadow-sm">
+            <div class="flex items-center justify-between gap-3">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-wide text-fuchsia-700">Total Imunisasi</p>
+                    <p class="mt-2 text-3xl font-extrabold text-fuchsia-700">{{ $summary['total_immunizations'] }}</p>
+                </div>
+                <span class="rounded-full bg-fuchsia-100 px-3 py-1 text-xs font-bold text-fuchsia-700">Data tercatat</span>
+            </div>
+        </article>
+    </section>
+
+    <section class="mt-6 grid gap-6 lg:grid-cols-2">
+        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div class="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-5 py-4">
+                <h2 class="text-base font-bold text-slate-900 sm:text-lg">Booking Terbaru</h2>
+                <span class="rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold text-slate-600">{{ $recentBookings->count() }} data</span>
+            </div>
+
             <div class="overflow-x-auto">
-                <table class="w-full text-left">
-                    <thead class="text-sm text-gray-500">
+                <table class="min-w-full text-left">
+                    <thead class="bg-white text-xs font-semibold uppercase tracking-wide text-slate-500">
                         <tr>
-                            <th class="px-4 py-3">Parent</th>
-                            <th class="px-4 py-3">Anak</th>
-                            <th class="px-4 py-3">Layanan</th>
-                            <th class="px-4 py-3">Status</th>
+                            <th class="px-4 py-3 sm:px-5">Parent</th>
+                            <th class="px-4 py-3 sm:px-5">Anak</th>
+                            <th class="px-4 py-3 sm:px-5">Layanan</th>
+                            <th class="px-4 py-3 sm:px-5">Status</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="divide-y divide-slate-100 text-sm text-slate-700">
                         @forelse($recentBookings as $booking)
-                            <tr class="border-t">
-                                <td class="px-4 py-3">{{ $booking->user->name ?? '-' }}</td>
-                                <td class="px-4 py-3">{{ $booking->child->name ?? '-' }}</td>
-                                <td class="px-4 py-3">{{ $booking->service->name ?? '-' }}</td>
-                                <td class="px-4 py-3">
-                                    @if($booking->status === 'paid')
-                                        <span class="inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700">Paid</span>
-                                    @elseif($booking->status === 'pending')
-                                        <span class="inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-700">Pending</span>
-                                    @else
-                                        <span class="inline-flex rounded-full bg-gray-100 px-3 py-1 text-xs font-bold text-gray-700">{{ ucfirst($booking->status) }}</span>
-                                    @endif
+                            @php
+                                $statusClass = match($booking->status) {
+                                    'paid' => 'bg-emerald-100 text-emerald-700',
+                                    'pending' => 'bg-amber-100 text-amber-700',
+                                    'confirmed' => 'bg-blue-100 text-blue-700',
+                                    'declined' => 'bg-rose-100 text-rose-700',
+                                    default => 'bg-slate-100 text-slate-700',
+                                };
+                            @endphp
+                            <tr class="transition hover:bg-slate-50/80">
+                                <td class="px-4 py-3 sm:px-5">{{ $booking->user->name ?? '-' }}</td>
+                                <td class="px-4 py-3 font-semibold text-slate-900 sm:px-5">{{ $booking->child->name ?? '-' }}</td>
+                                <td class="px-4 py-3 sm:px-5">{{ $booking->service->name ?? '-' }}</td>
+                                <td class="px-4 py-3 sm:px-5">
+                                    <span class="inline-flex rounded-full px-2.5 py-1 text-xs font-semibold {{ $statusClass }}">{{ ucfirst($booking->status) }}</span>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="px-4 py-8 text-center text-gray-500">Belum ada data booking.</td>
+                                <td colspan="4" class="px-4 py-10 text-center sm:px-5">
+                                    <p class="text-sm font-medium text-slate-600">Belum ada data booking.</p>
+                                </td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -91,31 +131,35 @@
             </div>
         </div>
 
-        <div class="rounded-2xl bg-white shadow-sm ring-1 ring-gray-100 overflow-hidden">
-            <div class="px-5 py-4 border-b bg-gray-50">
-                <h2 class="font-bold text-lg">Imunisasi Terbaru</h2>
+        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div class="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-5 py-4">
+                <h2 class="text-base font-bold text-slate-900 sm:text-lg">Imunisasi Terbaru</h2>
+                <span class="rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold text-slate-600">{{ $recentImmunizations->count() }} data</span>
             </div>
+
             <div class="overflow-x-auto">
-                <table class="w-full text-left">
-                    <thead class="text-sm text-gray-500">
+                <table class="min-w-full text-left">
+                    <thead class="bg-white text-xs font-semibold uppercase tracking-wide text-slate-500">
                         <tr>
-                            <th class="px-4 py-3">Tanggal</th>
-                            <th class="px-4 py-3">Anak</th>
-                            <th class="px-4 py-3">Vaksin</th>
-                            <th class="px-4 py-3">Bidan</th>
+                            <th class="px-4 py-3 sm:px-5">Tanggal</th>
+                            <th class="px-4 py-3 sm:px-5">Anak</th>
+                            <th class="px-4 py-3 sm:px-5">Vaksin</th>
+                            <th class="px-4 py-3 sm:px-5">Bidan</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="divide-y divide-slate-100 text-sm text-slate-700">
                         @forelse($recentImmunizations as $item)
-                            <tr class="border-t">
-                                <td class="px-4 py-3">{{ \Carbon\Carbon::parse($item->date)->format('d/m/y') }}</td>
-                                <td class="px-4 py-3">{{ $item->child->name ?? '-' }}</td>
-                                <td class="px-4 py-3">{{ $item->vaccine->name ?? '-' }}</td>
-                                <td class="px-4 py-3">{{ $item->midwife->name ?? '-' }}</td>
+                            <tr class="transition hover:bg-slate-50/80">
+                                <td class="px-4 py-3 whitespace-nowrap sm:px-5">{{ \Carbon\Carbon::parse($item->date)->format('d/m/Y') }}</td>
+                                <td class="px-4 py-3 font-semibold text-slate-900 sm:px-5">{{ $item->child->name ?? '-' }}</td>
+                                <td class="px-4 py-3 sm:px-5">{{ $item->vaccine->name ?? '-' }}</td>
+                                <td class="px-4 py-3 sm:px-5">{{ $item->midwife->name ?? '-' }}</td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="px-4 py-8 text-center text-gray-500">Belum ada data imunisasi.</td>
+                                <td colspan="4" class="px-4 py-10 text-center sm:px-5">
+                                    <p class="text-sm font-medium text-slate-600">Belum ada data imunisasi.</p>
+                                </td>
                             </tr>
                         @endforelse
                     </tbody>

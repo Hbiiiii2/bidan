@@ -10,7 +10,10 @@
             <h1 class="text-3xl font-black text-gray-900">Kelola Bidan</h1>
             <p class="text-gray-600 mt-1">Tambahkan, edit, atau hapus bidan yang tersedia di sistem.</p>
         </div>
-        <a href="/admin/midwives/create" class="rounded-full bg-[#b80049] px-5 py-2.5 text-white font-bold">+ Tambah Bidan</a>
+        <div class="flex flex-wrap gap-2">
+            <a href="/admin/midwives/schedules" class="rounded-full border border-gray-300 bg-white px-5 py-2.5 font-bold text-gray-700 hover:bg-gray-50">Lihat Jadwal Bidan</a>
+            <a href="/admin/midwives/create" class="rounded-full bg-[#b80049] px-5 py-2.5 text-white font-bold">+ Tambah Bidan</a>
+        </div>
     </div>
 
     <div class="rounded-2xl bg-white shadow-sm ring-1 ring-gray-100 overflow-hidden">

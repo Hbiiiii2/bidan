@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminMidwifeController;
+use App\Http\Controllers\AdminParentController;
 use App\Http\Controllers\AdminServiceController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
@@ -11,8 +12,12 @@ use App\Http\Controllers\ImmunizationStatusController;
 use App\Http\Controllers\MidwifeController;
 use App\Http\Controllers\MidwifeProfileController;
 use App\Http\Controllers\ParentController;
+use App\Http\Controllers\ParentProfileController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ServiceController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,11 +27,37 @@ use Illuminate\Support\Facades\Route;
 */
 Route::view('/', 'pages.home.guest');
 
-Route::get('/register', [AuthController::class, 'showRegister']);
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
-Route::get('/login', [AuthController::class, 'showLogin']);
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth');
+
+Route::get('/email/activated', function () {
+    return view('auth.verified-success');
+})->name('verification.activated');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/email/verify', function () {
+        return view('auth.verify-email');
+    })->name('verification.notice');
+
+    Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+        $request->fulfill();
+
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('verification.activated');
+    })->middleware(['signed'])->name('verification.verify');
+
+    Route::post('/email/verification-notification', function (Request $request) {
+        $request->user()->sendEmailVerificationNotification();
+
+        return back()->with('success', 'Link verifikasi baru sudah dikirim ke email Anda.');
+    })->middleware('throttle:6,1')->name('verification.send');
+});
 /*
 |--------------------------------------------------------------------------
 | AUTHENTICATED ROUTES
@@ -40,8 +71,8 @@ Route::middleware(['auth'])->group(function () {
     | PARENT (ORANG TUA)
     |--------------------------------------------------------------------------
     */
-    Route::middleware(['role:parent'])->group(function () {
-        Route::get('/dashboard', [ParentController::class, 'dashboard']);
+    Route::middleware(['role:parent', 'verified'])->group(function () {
+        Route::get('/parent/dashboard', [ParentController::class, 'dashboard']);
         Route::get('/services', [ServiceController::class, 'index']);
         Route::get('/bookings', [BookingController::class, 'index']);
 
@@ -62,6 +93,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/children/{id}/edit', [ChildController::class, 'edit']);
         Route::put('/children/{id}', [ChildController::class, 'update']);
         Route::delete('/children/{id}', [ChildController::class, 'destroy']);
+        Route::get('/parent/profile', [ParentProfileController::class, 'show']);
+        Route::post('/parent/profile', [ParentProfileController::class, 'update']);
+        Route::post('/parent/profile/password', [ParentProfileController::class, 'updatePassword']);
 
     });
     /*
@@ -94,6 +128,10 @@ Route::middleware(['auth'])->group(function () {
     */
     Route::middleware(['role:admin'])->group(function () {
         Route::get('/admin', [AdminController::class, 'index']);
+        Route::get('/admin/parents', [AdminParentController::class, 'index']);
+        Route::post('/admin/parents/{parent}/reset-password', [AdminParentController::class, 'resetPassword']);
+        Route::delete('/admin/parents/{parent}', [AdminParentController::class, 'destroy']);
+
         Route::get('/admin/services', [AdminServiceController::class, 'index']);
         Route::get('/admin/services/create', [AdminServiceController::class, 'create']);
         Route::post('/admin/services', [AdminServiceController::class, 'store']);
@@ -102,6 +140,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/admin/services/{service}', [AdminServiceController::class, 'destroy']);
 
         Route::get('/admin/midwives', [AdminMidwifeController::class, 'index']);
+        Route::get('/admin/midwives/schedules', [AdminMidwifeController::class, 'schedules']);
         Route::get('/admin/midwives/create', [AdminMidwifeController::class, 'create']);
         Route::post('/admin/midwives', [AdminMidwifeController::class, 'store']);
         Route::get('/admin/midwives/{midwife}/edit', [AdminMidwifeController::class, 'edit']);
