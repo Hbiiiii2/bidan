@@ -102,9 +102,17 @@
 
                             <div class="w-full md:w-56">
                                 @if(in_array($booking->status, ['pending', 'confirmed']))
-                                    <a href="/checkout/{{ $booking->id }}" class="block w-full rounded-xl bg-[#b80049] px-4 py-3 text-center text-sm font-bold text-white transition hover:bg-[#e2165f]">
-                                        Lanjut Bayar ->
-                                    </a>
+                                    <div class="space-y-2">
+                                        <a href="/checkout/{{ $booking->id }}" class="block w-full rounded-xl bg-[#b80049] px-4 py-3 text-center text-sm font-bold text-white transition hover:bg-[#e2165f]">
+                                            Lanjut Bayar ->
+                                        </a>
+                                        <form method="POST" action="{{ route('booking.cancel', $booking->id) }}" onsubmit="return confirm('Yakin ingin membatalkan booking ini?');">
+                                            @csrf
+                                            <button type="submit" class="block w-full rounded-xl bg-gray-100 px-4 py-3 text-center text-sm font-bold text-gray-700 transition hover:bg-gray-200">
+                                                Batalkan Booking
+                                            </button>
+                                        </form>
+                                    </div>
                                 @elseif($booking->status === 'declined')
                                     <div class="rounded-xl bg-red-100 px-4 py-3 text-center text-sm font-bold text-red-700">
                                         Ditolak Bidan

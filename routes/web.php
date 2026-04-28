@@ -15,6 +15,7 @@ use App\Http\Controllers\ParentController;
 use App\Http\Controllers\ParentProfileController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ServiceController;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,6 +33,9 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth');
+Route::post('/midtrans/notification', [PaymentController::class, 'notification'])
+    ->withoutMiddleware([VerifyCsrfToken::class])
+    ->name('midtrans.notification');
 
 Route::get('/email/activated', function () {
     return view('auth.verified-success');
@@ -79,11 +83,14 @@ Route::middleware(['auth'])->group(function () {
         // BOOKING
         Route::get('/booking/{service}', [BookingController::class, 'create']);
         Route::post('/booking/store', [BookingController::class, 'store']);
+        Route::post('/booking/{booking}/cancel', [BookingController::class, 'cancel'])->name('booking.cancel');
 
         // PAYMENT
         Route::get('/checkout/{booking}', [PaymentController::class, 'checkout'])->name('checkout');
         Route::post('/pay/{booking}', [PaymentController::class, 'pay']);
+        Route::get('/payment/finish', [PaymentController::class, 'finish'])->name('payment.finish');
         Route::get('/payment/success/{transaction}', [PaymentController::class, 'success'])->name('payment.success');
+        Route::post('/payment/recheck/{transaction}', [PaymentController::class, 'recheck'])->name('payment.recheck');
 
         Route::get('/child/{id}/status', [ImmunizationStatusController::class, 'show']);
         Route::post('/child/{id}/status', [ImmunizationStatusController::class, 'store']);

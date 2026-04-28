@@ -200,6 +200,32 @@ class BookingController extends Controller
         return redirect('/bookings')->with('success', 'Booking berhasil dibuat. Silakan lanjutkan ke pembayaran.');
     }
 
+    public function cancel($bookingId)
+    {
+        $booking = Booking::with('transaction')
+            ->where('user_id', Auth::id())
+            ->findOrFail($bookingId);
+
+        if (in_array($booking->status, ['paid', 'completed', 'canceled', 'declined'], true)) {
+            return redirect('/bookings')->with('error', 'Booking ini tidak bisa dibatalkan.');
+        }
+
+        if ($booking->transaction && $booking->transaction->status === 'settlement') {
+            return redirect('/bookings')->with('error', 'Pembayaran sudah berhasil, booking tidak dapat dibatalkan.');
+        }
+
+        $booking->update(['status' => 'canceled']);
+
+        if ($booking->transaction && $booking->transaction->status !== 'settlement') {
+            $booking->transaction->update([
+                'status' => 'failed',
+                'paid_at' => null,
+            ]);
+        }
+
+        return redirect('/bookings')->with('success', 'Booking berhasil dibatalkan.');
+    }
+
     private function midwifeDailyImmunizationCount(int $midwifeId, string $date): int
     {
         return Booking::whereHas('schedule', function ($query) use ($midwifeId, $date) {
